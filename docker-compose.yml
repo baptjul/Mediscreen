@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  patient-service:
+    build:
+      context: ./Patients
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - spring.datasource.url=jdbc:mysql://patients:3306/patients
+      - spring.datasource.username=root
+      - spring.datasource.password=ZyBqyEwZ3AVMApMfNC
+
+  user-service:
+    build:
+      context: ./Users
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - spring.data.mongodb.uri=mongodb://historyDb:27017/users
+
+  history-service:
+    build:
+      context: ./History
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - spring.data.mongodb.uri=mongodb://historyDb:27017/historyDB
+
+  historyDb:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  patients:
+    image: mysql:latest
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=ZyBqyEwZ3AVMApMfNC
+      - MYSQL_DATABASE=patients
+
+  assessment-service:
+    build:
+      context: ./Assessment
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
+  gateway:
+    build:
+      context: ./Gateway
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090"
+    depends_on:
+      - patient-service
+      - history-service
+      - assessment-service
+      - user-service

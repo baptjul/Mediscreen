@@ -1,0 +1,67 @@
+.content {
+    text-align: center;
+}
+
+.patientDetails {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    overflow: auto;
+    height: 350px;
+    padding: 5px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.patientColumn {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.buttonDetails {
+    margin-top: 10px;
+}
+
+.patientInfo {
+    border-right: 1px solid #ccc;
+    width: 100%;
+    padding: 10px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.patientHistory {
+    border-left: 1px solid #ccc;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.divider {
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.scrollableContent {
+    padding: 15px;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.historyButtons {
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.disconnectButton {
+    margin-left: auto;
+    margin-right: 25px;
+}
