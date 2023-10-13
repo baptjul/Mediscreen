@@ -18,7 +18,6 @@ export default async function fetchAPI<T>(endpoint: string, method: string, data
         options.body = JSON.stringify(data);
     }
 
-    console.log(`${API_URL}${endpoint}`)
     const response = await fetch(`${API_URL}${endpoint}`, options);
 
     if (!response.ok) {

@@ -20,7 +20,7 @@ export default function PatientList() {
     const [editedPatients, setEditedPatients] = useState<{ [key: number]: PatientEntity }>({})
 
     useEffect(() => {
-        fetchPatients().then(() => console.log('Patients fetched'));
+        fetchPatients();
     }, []);
 
     async function fetchPatients() {
@@ -72,11 +72,11 @@ export default function PatientList() {
             setEditMode(null);
             setHistoryEditMode(null);
         }
-    };
+    }
 
     function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
         setSearch(event.target.value);
-    };
+    }
 
     function handleInputChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, patientId: number, field: string) {
         const updatedPatient = {...editedPatients[patientId], [field]: event.target.value};
@@ -84,7 +84,7 @@ export default function PatientList() {
             ...prevEditedPatients,
             [patientId]: updatedPatient,
         }));
-    };
+    }
 
     const toggleEditMode = (patient: PatientEntity) => {
         if (editMode === patient.id) {
@@ -142,7 +142,7 @@ export default function PatientList() {
                 const updatedPatientData: any = await fetchAPI(`/patientService/patient/update/${patientId}`, 'PUT', updatedPatient);
 
                 const updatedPatientsList = patients.map(patient => {
-                    if(patient.id === patientId) {
+                    if (patient.id === patientId) {
                         return {
                             ...patient,
                             ...updatedPatientData,
@@ -266,7 +266,8 @@ export default function PatientList() {
                                                 </div>
                                                 <div className="patientColumn">
                                                     <PatientHistory patientId={patient.id} histories={patient.history}
-                                                                    editMode={historyEditMode} updateAssess={() => fetchAndUpdateAssessment(patient)}/>
+                                                                    editMode={historyEditMode}
+                                                                    updateAssess={() => fetchAndUpdateAssessment(patient)}/>
                                                     <div className="buttonDetails">
                                                         <Button className="historyButtons"
                                                                 onClick={() => toggleHistoryEditMode(patient)}>

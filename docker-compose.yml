@@ -61,3 +61,12 @@ services:
       - history-service
       - assessment-service
       - user-service
+
+  react-app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway

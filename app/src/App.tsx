@@ -21,6 +21,7 @@ function TokenValidator() {
 
     return null;
 }
+
 async function validateToken(navigate: (to: string) => void) {
     const token = localStorage.getItem('token');
     if (token) {
@@ -45,17 +46,17 @@ function App() {
             <div className="App">
                 <Helmet>
                     <title>MediScreen</title>
-                    <link rel="icon" href="./img_icon.ico" />
+                    <link rel="icon" href="./img_icon.ico"/>
                 </Helmet>
 
                 <Router>
-                    <TokenValidator />
-                    <ConditionalNavbar />
+                    <TokenValidator/>
+                    <ConditionalNavbar/>
                     <Routes>
-                        <Route path="/connection" element={<Connection />} />
-                        <Route path="/" element={<Home />} />
-                        <Route path="/patient/list" element={<PatientList />} />
-                        <Route path="/patient/add" element={<AddPatient />} />
+                        <Route path="/connection" element={<Connection/>}/>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/patient/list" element={<PatientList/>}/>
+                        <Route path="/patient/add" element={<AddPatient/>}/>
                     </Routes>
                 </Router>
             </div>
@@ -69,7 +70,7 @@ function ConditionalNavbar() {
         return null;
     }
 
-    return <MainNavbar />;
+    return <MainNavbar/>;
 }
 
 export default App;

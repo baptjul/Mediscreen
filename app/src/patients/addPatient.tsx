@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Form, Container } from 'react-bootstrap';
+import React, {useState} from 'react';
+import {Button, Form, Container} from 'react-bootstrap';
 import PatientEntity from '../interfaces/PatientEntity';
 import fetchAPI from "../api/api";
 
@@ -16,9 +16,9 @@ export default function AddPatient() {
     const [patient, setPatient] = useState<Omit<PatientEntity, 'id'>>(initialPatient);
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = event.target;
-        setPatient(prev => ({ ...prev, [name]: value }));
-    };
+        const {name, value} = event.target;
+        setPatient(prev => ({...prev, [name]: value}));
+    }
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -39,17 +39,17 @@ export default function AddPatient() {
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="family">
                     <Form.Label>Family Name</Form.Label>
-                    <Form.Control type="text" name="family" value={patient.family} onChange={handleChange} />
+                    <Form.Control type="text" name="family" value={patient.family} onChange={handleChange}/>
                 </Form.Group>
 
                 <Form.Group controlId="given">
                     <Form.Label>Given Name</Form.Label>
-                    <Form.Control type="text" name="given" value={patient.given} onChange={handleChange} />
+                    <Form.Control type="text" name="given" value={patient.given} onChange={handleChange}/>
                 </Form.Group>
 
                 <Form.Group controlId="dob">
                     <Form.Label>Date of Birth</Form.Label>
-                    <Form.Control type="date" name="dob" value={patient.dob} onChange={handleChange} />
+                    <Form.Control type="date" name="dob" value={patient.dob} onChange={handleChange}/>
                 </Form.Group>
 
                 <Form.Group controlId="sex">
@@ -62,12 +62,12 @@ export default function AddPatient() {
 
                 <Form.Group controlId="address">
                     <Form.Label>Address</Form.Label>
-                    <Form.Control type="text" name="address" value={patient.address} onChange={handleChange} />
+                    <Form.Control type="text" name="address" value={patient.address} onChange={handleChange}/>
                 </Form.Group>
 
                 <Form.Group controlId="phone">
                     <Form.Label>Phone</Form.Label>
-                    <Form.Control type="text" name="phone" value={patient.phone} onChange={handleChange} />
+                    <Form.Control type="text" name="phone" value={patient.phone} onChange={handleChange}/>
                 </Form.Group>
 
                 <Button className="mt-3" variant="primary" type="submit" disabled={isAddButtonDisabled}>

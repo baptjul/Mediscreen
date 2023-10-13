@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import fetchAPI from '../api/api';
 
 export default function Connection() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoginMode, setIsLoginMode] = useState(true);
+    const [errorMessage, setErrorMessage] = useState(false);
 
     async function handleAuth() {
         const endpoint = isLoginMode ? '/usersService/login' : '/usersService/signup';
@@ -17,23 +18,25 @@ export default function Connection() {
             if (response) {
                 localStorage.setItem('token', response);
                 window.location.href = '/';
+                setErrorMessage(false);
             } else {
+                setErrorMessage(true);
                 console.error('Authentication failed');
             }
         } catch (error: any) {
-            console.error('Error during authentication:', error.message);
+            setErrorMessage(true);
         }
     }
 
     function toggleMode() {
-        setIsLoginMode(prevMode => !prevMode);  // Toggle the mode
+        setIsLoginMode(prevMode => !prevMode);
     }
 
     return (
         <div className="container mt-5">
-            <div className="card mx-auto" style={{ maxWidth: '40%' }}>
+            <div className="card mx-auto" style={{maxWidth: '40%'}}>
                 <div className="card-body text-center">
-                    <h2 className="card-title">{isLoginMode ? 'Login' : 'Sign Up'}</h2>  {/* Toggle title */}
+                    <h2 className="card-title">{isLoginMode ? 'Login' : 'Sign Up'}</h2>
                     <form>
                         <div className="mb-3">
                             <label htmlFor="username" className="form-label">
@@ -59,10 +62,18 @@ export default function Connection() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
+                        {errorMessage && (
+                            <p className="text-danger">
+                                {isLoginMode
+                                    ? 'Incorrect username or password'
+                                    : 'Username already exists'}
+                            </p>
+                        )}
                         <p className="mt-3 text-decoration-underline">
                             {isLoginMode ?
-                                <span onClick={toggleMode} style={{ cursor: 'pointer', color: 'blue' }}>Create an account</span> :
-                                <span onClick={toggleMode} style={{ cursor: 'pointer', color: 'blue' }}>Login</span>
+                                <span onClick={toggleMode}
+                                      style={{cursor: 'pointer', color: 'blue'}}>Create an account</span> :
+                                <span onClick={toggleMode} style={{cursor: 'pointer', color: 'blue'}}>Login</span>
                             }
                         </p>
                         <button
@@ -70,7 +81,7 @@ export default function Connection() {
                             className="btn btn-primary"
                             onClick={handleAuth}
                         >
-                            {isLoginMode ? 'Login' : 'Sign Up'}  {/* Toggle button text */}
+                            {isLoginMode ? 'Login' : 'Sign Up'}
                         </button>
                     </form>
                 </div>

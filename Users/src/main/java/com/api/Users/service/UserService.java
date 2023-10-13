@@ -37,13 +37,16 @@ public class UserService {
     public String signup(UserEntity user) {
         logger.info("Registering user with username: {}", user.getUsername());
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        UserEntity registeredUser = userRepository.save(user);
-        logger.info("User registered with ID: {}", registeredUser.getId());
-        String token = jwtUtil.generateToken(registeredUser.getUsername());
-        System.out.println("token = " + token);
-        return jwtUtil.generateToken(registeredUser.getUsername());
+        Optional<UserEntity> optionalUser = findByUsername(user.getUsername());
+        if (optionalUser.isPresent()) {
+            logger.warn("User already exists: {}", user.getUsername());
+            return null;
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            UserEntity registeredUser = userRepository.save(user);
+            logger.info("User registered with ID: {}", registeredUser.getId());
+            return jwtUtil.generateToken(registeredUser.getUsername());
+        }
     }
 
     /**
