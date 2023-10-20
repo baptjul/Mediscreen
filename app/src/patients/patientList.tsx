@@ -28,10 +28,19 @@ export default function PatientList() {
             const data: any = await fetchAPI<PatientEntity[]>('/patientService/patient/list', 'GET');
 
             const enhancedDataPromises = data.map(async (patient: any) => {
-                const [historyData, assessmentData] = await Promise.all([
-                    fetchAPI(`/historyService/patHistory/patient/${patient.id}`, 'GET'),
-                    fetchAPI(`/assessService/assess/${patient.id}`, 'GET')
-                ]);
+                let historyData, assessmentData;
+
+                try {
+                    historyData = await fetchAPI(`/historyService/patHistory/patient/${patient.id}`, 'GET');
+                } catch (error) {
+                    console.error('Error fetching history data:', error);
+                }
+
+                try {
+                    assessmentData = await fetchAPI(`/assessService/assess/${patient.id}`, 'GET');
+                } catch (error) {
+                    console.error('Error fetching assessment data:', error);
+                }
                 return {
                     ...patient,
                     history: historyData,
