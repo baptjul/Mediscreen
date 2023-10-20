@@ -35,7 +35,7 @@ public class ApiService {
 
     public String generateToken() {
         return Jwts.builder()
-                .setSubject("assessment-api")  // Use a generic subject or service identifier
+                .setSubject("assessment-api")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 10)))
                 .signWith(secretKey)

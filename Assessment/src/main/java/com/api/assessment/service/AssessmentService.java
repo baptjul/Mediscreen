@@ -5,7 +5,6 @@ import com.api.assessment.entities.PatientEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
@@ -32,7 +31,7 @@ public class AssessmentService {
     /**
      * List of triggers
      */
-    private final List<String> triggers = Arrays.asList(
+    public final List<String> triggers = Arrays.asList(
             "Hémoglobine A1C", "Microalbumine", "Taille", "Poids", "Fumeur",
             "Anormal", "Cholestérol", "Vertige", "Rechute", "Réaction", "Anticorps"
     );
@@ -44,7 +43,7 @@ public class AssessmentService {
      * @param triggerCount
      * @return
      */
-    private String calculateRiskLevel(int age, String sex, int triggerCount) {
+    public String calculateRiskLevel(int age, String sex, int triggerCount) {
         if (triggerCount == 0) {
             return "None";
         } else if (age < 30) {
