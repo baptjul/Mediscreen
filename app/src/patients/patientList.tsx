@@ -56,19 +56,19 @@ export default function PatientList() {
     }
 
     async function fetchAndUpdateAssessment(patient: PatientEntity) {
-        const assessmentData: any = await fetchAPI(`/assessService/assess/${patient.id}`, 'GET');
+        let assess: any = await fetchAPI(`/assessService/assess/${patient.id}`, 'GET');
         setPatients(prevPatients => {
             return prevPatients.map(prevPatient => {
                 if (prevPatient.id === patient.id) {
                     return {
                         ...prevPatient,
-                        assessment: assessmentData,
+                        assessment: assess,
                     };
                 } else {
                     return prevPatient;
                 }
             });
-        })
+        });
     }
 
     function handleExpandClick(patient: PatientEntity) {
@@ -170,6 +170,7 @@ export default function PatientList() {
 
                 setEditMode(null);
                 setHistoryEditMode(null);
+                await fetchAndUpdateAssessment(updatedPatient);
             }
         } catch (error) {
             console.error('Error updating patient:', error);

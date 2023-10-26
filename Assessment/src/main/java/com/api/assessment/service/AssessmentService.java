@@ -3,6 +3,7 @@ package com.api.assessment.service;
 import com.api.assessment.entities.HistoryEntity;
 import com.api.assessment.entities.PatientEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -14,9 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-import static com.api.assessment.constants.ApiUrl.PATIENTURL;
-import static com.api.assessment.constants.ApiUrl.HISTORYURL;
-
 /**
  * Represents the AssessmentService
  */
@@ -25,6 +23,12 @@ public class AssessmentService {
 
     @Autowired
     private ApiService apiService;
+
+    @Value("${HISTORYURL}")
+    private String HISTORYURL;
+
+    @Value("${PATIENTURL}")
+    private String PATIENTURL;
 
     private static final Logger logger = Logger.getLogger(AssessmentService.class.getName());
 
@@ -82,7 +86,7 @@ public class AssessmentService {
     public Mono<String> assessRisks(Integer patientId) {
         logger.info("Assessing risks for patient ID: " + patientId);
 
-        Mono<PatientEntity> patientMono = apiService.GetMethods(PATIENTURL, String.valueOf(patientId), new ParameterizedTypeReference<>() {
+        Mono<PatientEntity> patientMono = apiService.GetMethods(PATIENTURL, patientId.toString(), new ParameterizedTypeReference<>() {
         });
         Mono<List<HistoryEntity>> historiesMono = apiService.GetMethods(HISTORYURL,"patient/" + patientId, new ParameterizedTypeReference<>() {
         });

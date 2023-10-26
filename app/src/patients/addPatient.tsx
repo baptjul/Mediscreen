@@ -26,6 +26,7 @@ export default function AddPatient() {
             await fetchAPI('/patientService/patient/add', 'POST', patient);
             alert("Patient added successfully!");
             setPatient(initialPatient);
+            window.location.href = '/patient/list';
         } catch (error: any) {
             alert("Failed to add patient: " + error.message);
         }

@@ -16,15 +16,16 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({patientId, histories, ed
     const [editedHistoryNotes, setEditedHistoryNotes] = useState<{ [key: number]: string }>({});
     const [usedHistory, setUsedHistory] = useState<any[] | undefined>(histories);
 
+
     function historyInputChange(historyId: string, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const updatedNotes = {...editedHistoryNotes};
-        updatedNotes[parseInt(historyId)] = event.target.value;
+        updatedNotes[Number(historyId)] = event.target.value;
         setEditedHistoryNotes(updatedNotes);
     }
 
     async function onSave(historyId: string) {
         if (!usedHistory) return;
-        const updatedNote = editedHistoryNotes[parseInt(historyId)];
+        const updatedNote = editedHistoryNotes[Number(historyId)];
         if (updatedNote && usedHistory) {
             const updatedHistory = usedHistory.find(e => e.id === historyId);
             if (updatedHistory) {
@@ -35,15 +36,17 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({patientId, histories, ed
         try {
             if (!usedHistory.find(e => e.id === historyId)?.new) {
                 await fetchAPI(`/historyService/patHistory/update/${historyId}`, 'PUT', usedHistory.find(e => e.id === historyId));
+                alert("Note updated !");
             } else {
                 delete usedHistory.find(e => e.id === historyId)?.new;
                 await fetchAPI(`/historyService/patHistory/add`, 'POST', usedHistory.find(e => e.id === historyId));
+                alert("New note added !");
             }
 
             const updatedNotes = {...editedHistoryNotes};
-            delete updatedNotes[parseInt(historyId)];
+            delete updatedNotes[Number(historyId)];
             setEditedHistoryNotes(updatedNotes);
-            //updateAssess();
+            updateAssess();
         } catch (error) {
             console.error('Error updating history note:', error);
         }
@@ -59,7 +62,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({patientId, histories, ed
             const updatedHistories = usedHistory.filter(e => e.id !== historyId);
             setUsedHistory(updatedHistories);
             setEditedHistoryNotes({...editedHistoryNotes});
-            //updateAssess();
+            updateAssess();
         } catch (error) {
             console.error('Error deleting history note:', error);
         }
@@ -78,7 +81,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({patientId, histories, ed
 
     function reset(historyId: string) {
         const updatedNotes = {...editedHistoryNotes};
-        delete updatedNotes[parseInt(historyId)];
+        delete updatedNotes[Number(historyId)];
         setEditedHistoryNotes(updatedNotes);
     }
 
@@ -92,7 +95,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({patientId, histories, ed
                                 <Form.Control
                                     as="textarea"
                                     rows={5}
-                                    value={editedHistoryNotes[parseInt(history.id)] || history.note}
+                                    value={editedHistoryNotes[Number(history.id)] || history.note}
                                     onChange={(e) => historyInputChange(history.id, e)}
                                 />
                                 <Button className="historyButtons" onClick={() => onSave(history.id)}><i

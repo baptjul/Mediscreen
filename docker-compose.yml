@@ -49,6 +49,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    environment:
+      - HISTORYURL=http://history-service:8082/patHistory/
+      - PATIENTURL=http://patient-service:8081/patient/
 
   gateway:
     build:
