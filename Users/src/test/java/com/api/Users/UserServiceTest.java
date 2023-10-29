@@ -82,4 +82,39 @@ public class UserServiceTest {
 
         assertEquals("testToken", result);
     }
+
+    @Test
+    public void testSignupUserAlreadyExists() {
+        UserEntity user = new UserEntity();
+        user.setUsername("testUser");
+
+        when(userRepository.findByUsername(eq("testUser"))).thenReturn(Optional.of(user));
+
+        String result = userService.signup(user);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void testLoginUserNotFound() {
+        when(userRepository.findByUsername(eq("unknownUser"))).thenReturn(Optional.empty());
+
+        String result = userService.login("unknownUser", "testPass");
+
+        assertNull(result);
+    }
+
+    @Test
+    public void testLoginIncorrectPassword() {
+        UserEntity user = new UserEntity();
+        user.setUsername("testUser");
+        user.setPassword("password");
+
+        when(userRepository.findByUsername(eq("testUser"))).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(eq("wrongPass"), eq("encodedPassword"))).thenReturn(false);
+
+        String result = userService.login("testUser", "wrongPass");
+
+        assertNull(result);
+    }
 }

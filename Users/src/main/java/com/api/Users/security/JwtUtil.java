@@ -14,34 +14,34 @@ import java.util.Date;
 /**
  * Utility class for generating JWT tokens.
  */
-    @Component
-    public class JwtUtil {
+@Component
+public class JwtUtil {
 
-        @Value("${jwt.signingKey}")
-        private String signingKey;
+    @Value("${jwt.signingKey}")
+    private String signingKey;
 
-        private Key secretKey;
+    private Key secretKey;
 
-        /**
-         * Initializes the secret key used for signing JWT tokens.
-         */
-        @PostConstruct
-        public void init() {
-            secretKey = Keys.hmacShaKeyFor(signingKey.getBytes(StandardCharsets.UTF_8));
-        }
-
-        /**
-         * Generates a JWT token for the given username valid for 10 hours.
-         *
-         * @param username The username to generate a token for.
-         * @return The JWT token.
-         */
-        public String generateToken(String username) {
-            return Jwts.builder()
-                    .setSubject(username)
-                    .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 10)))
-                    .signWith(secretKey)
-                    .compact();
-        }
+    /**
+     * Initializes the secret key used for signing JWT tokens.
+     */
+    @PostConstruct
+    public void init() {
+        secretKey = Keys.hmacShaKeyFor(signingKey.getBytes(StandardCharsets.UTF_8));
     }
+
+    /**
+     * Generates a JWT token for the given username valid for 10 hours.
+     *
+     * @param username The username to generate a token for.
+     * @return The JWT token.
+     */
+    public String generateToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 10)))
+                .signWith(secretKey)
+                .compact();
+    }
+}

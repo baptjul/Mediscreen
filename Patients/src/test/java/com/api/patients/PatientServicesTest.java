@@ -1,9 +1,11 @@
 package com.api.patients;
 
+import static com.mysql.cj.conf.PropertyKey.logger;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.api.patients.entity.PatientEntity;
+import com.api.patients.exception.ServerErrorException;
 import com.api.patients.repository.PatientRepository;
 import com.api.patients.service.PatientServices;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,4 +83,43 @@ public class PatientServicesTest {
         patientServices.deletePatient(1);
         verify(patientRepository, times(1)).delete(patient1);
     }
+
+    @Test
+    public void testGetAllPatientsServerError() {
+        doThrow(new RuntimeException("Database error")).when(patientRepository).findAll();
+        assertThrows(ServerErrorException.class, () -> patientServices.getAllPatients());
+    }
+
+    @Test
+    public void testAddPatientServerError() {
+        doThrow(new RuntimeException("Database error")).when(patientRepository).save(any(PatientEntity.class));
+        assertThrows(ServerErrorException.class, () -> patientServices.addPatient(patient1));
+    }
+
+    @Test
+    public void testUpdatePatientServerError() {
+        when(patientRepository.findById(1)).thenReturn(Optional.of(patient1));
+        doThrow(new RuntimeException("Database error")).when(patientRepository).save(any(PatientEntity.class));
+        assertThrows(ServerErrorException.class, () -> patientServices.updatePatient(1, patient2));
+    }
+
+    @Test
+    public void testDeletePatientServerError() {
+        when(patientRepository.findById(1)).thenReturn(Optional.of(patient1));
+        doThrow(new RuntimeException("Database error")).when(patientRepository).delete(any(PatientEntity.class));
+        assertThrows(ServerErrorException.class, () -> patientServices.deletePatient(1));
+    }
+
+    @Test
+    public void testUpdatePatientNotFound() {
+        when(patientRepository.findById(10)).thenReturn(Optional.empty());
+        assertThrows(DataNotFoundException.class, () -> patientServices.updatePatient(3, patient2));
+    }
+
+    @Test
+    public void testDeletePatientNotFound() {
+        when(patientRepository.findById(10)).thenReturn(Optional.empty());
+        assertThrows(DataNotFoundException.class, () -> patientServices.deletePatient(3));
+    }
+
 }

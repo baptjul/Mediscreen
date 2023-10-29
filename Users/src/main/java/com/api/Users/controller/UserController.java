@@ -20,8 +20,12 @@ public class UserController {
      */
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody UserEntity user) {
-        String registeredUser = userService.signup(user);
-        return ResponseEntity.ok(registeredUser);
+        String token = userService.signup(user);
+        if (token != null) {
+            return ResponseEntity.ok(token);
+        } else {
+            return ResponseEntity.badRequest().body("User already exist");
+        }
     }
 
     /**

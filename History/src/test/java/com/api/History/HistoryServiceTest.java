@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.api.History.entity.HistoryEntity;
 import com.api.History.exception.DataNotFoundException;
+import com.api.History.exception.ServerErrorException;
 import com.api.History.repository.HistoryRepository;
 import com.api.History.service.HistoryService;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,6 +90,45 @@ public class HistoryServiceTest {
         String historyId = "1";
         List<HistoryEntity> deletedHistory = historyService.deletePatientHistory(historyId);
         assertEquals(0, deletedHistory.size());
+    }
+
+    @Test
+    public void testGetPatientHistoriesServerError() {
+        Integer patientId = 1;
+        doThrow(new RuntimeException("Database error")).when(historyRepository).findByPatientId(patientId);
+        assertThrows(ServerErrorException.class, () -> historyService.getPatientHistories(patientId));
+    }
+
+    @Test
+    public void testAddPatientHistoryServerError() {
+        doThrow(new RuntimeException("Database error")).when(historyRepository).save(any(HistoryEntity.class));
+        assertThrows(ServerErrorException.class, () -> historyService.addPatientHistory(new HistoryEntity()));
+    }
+
+    @Test
+    public void testUpdatePatientHistoryServerError() {
+        when(historyRepository.findById("1")).thenReturn(Optional.of(history1));
+        doThrow(new RuntimeException("Database error")).when(historyRepository).save(any(HistoryEntity.class));
+        assertThrows(ServerErrorException.class, () -> historyService.updatePatientHistory("1", new HistoryEntity()));
+    }
+
+    @Test
+    public void testDeletePatientHistoryServerError() {
+        when(historyRepository.findById("1")).thenReturn(Optional.of(history1));
+        doThrow(new RuntimeException("Database error")).when(historyRepository).delete(any(HistoryEntity.class));
+        assertThrows(ServerErrorException.class, () -> historyService.deletePatientHistory("1"));
+    }
+
+    @Test
+    public void testUpdatePatientHistoryNotFound() {
+        when(historyRepository.findById("2")).thenReturn(Optional.empty());
+        assertThrows(DataNotFoundException.class, () -> historyService.updatePatientHistory("2", new HistoryEntity()));
+    }
+
+    @Test
+    public void testDeletePatientHistoryNotFound() {
+        when(historyRepository.findById("2")).thenReturn(Optional.empty());
+        assertThrows(DataNotFoundException.class, () -> historyService.deletePatientHistory("2"));
     }
 }
 

@@ -56,6 +56,7 @@ export default function PatientList() {
     }
 
     async function fetchAndUpdateAssessment(patient: PatientEntity) {
+        console.log("asssess")
         let assess: any = await fetchAPI(`/assessService/assess/${patient.id}`, 'GET');
         setPatients(prevPatients => {
             return prevPatients.map(prevPatient => {

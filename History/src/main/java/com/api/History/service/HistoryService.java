@@ -33,7 +33,7 @@ public class HistoryService {
             return historyRepository.findByPatientId(patientId);
         } catch (Exception ex) {
             logger.error("error while trying to retrieve patient histor: {}", ex.getMessage());
-            throw new ServerErrorException("Server error while trying to retrieve patient history");
+                throw new ServerErrorException("Server error while trying to retrieve patient history");
         }
     }
 
